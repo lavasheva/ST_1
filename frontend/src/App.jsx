@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts, addProduct, deleteProduct, updateProduct } from "./features/productsSlice";
 import { setCategory } from "./features/filterSlice"; // Импортируем фильтр
+import { toggleTheme } from "./features/themeSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -11,6 +12,11 @@ function App() {
   const [newProductPrice, setNewProductPrice] = useState(""); // Поле для цены
   const [newProductCategories, setNewProductCategories] = useState(""); // Поле для категорий
   const [editProduct, setEditProduct] = useState(null);
+  const theme = useSelector((state) => state.theme.mode);
+  const handleToggleTheme = () => { 
+    dispatch(toggleTheme());
+  };
+
 
   useEffect(() => {
     dispatch(fetchProducts()); // Загружаем товары при запуске
@@ -70,8 +76,13 @@ function App() {
       : products.filter((product) => product.categories.includes(category));
 
   return (
-    <div>
-      <h1>Список товаров</h1>
+    <div className={theme}>
+      <p></p>
+      <button onClick={handleToggleTheme}>
+        {theme === "light" ? "  Тёмная тема" : "  Светлая тема"}
+      </button>
+    <p></p>
+
 
       {/* Фильтр категорий */}
       <select value={category} onChange={(e) => dispatch(setCategory(e.target.value))}>
@@ -79,6 +90,7 @@ function App() {
         <option value="Ноутбуки">Ноутбуки</option>
         <option value="Смартфоны">Смартфоны</option>
         <option value="Аксессуары">Аксессуары</option>
+        <option value="Гаджеты">Гаджеты</option>
       </select>
 
       {/* Форма редактирования товара */}
